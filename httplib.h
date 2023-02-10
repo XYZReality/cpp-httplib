@@ -1637,6 +1637,17 @@ inline void default_socket_options(socket_t sock) {
              sizeof(yes));
 #endif
 #endif
+
+#ifdef CPPHTTPLIB_SOCKET_INTERNAL_SEND_BUFSIZE
+  int32_t send_size = CPPHTTPLIB_SOCKET_INTERNAL_SEND_BUFSIZE;
+  setsockopt(sock, SOL_SOCKET, SO_SNDBUF, reinterpret_cast<char *>(&send_size),
+             sizeof(send_size));
+#endif
+#ifdef CPPHTTPLIB_SOCKET_INTERNAL_RECV_BUFSIZE
+  int32_t recv_size = CPPHTTPLIB_SOCKET_INTERNAL_RECV_BUFSIZE;
+  setsockopt(sock, SOL_SOCKET, SO_RCVBUF, reinterpret_cast<char *>(&recv_size),
+             sizeof(recv_size));
+#endif
 }
 
 template <class Rep, class Period>
@@ -2700,6 +2711,17 @@ socket_t create_socket(const std::string &host, const std::string &ip, int port,
       setsockopt(sock, IPPROTO_IPV6, IPV6_V6ONLY, reinterpret_cast<char *>(&no),
                  sizeof(no));
     }
+
+#ifdef CPPHTTPLIB_SOCKET_INTERNAL_SEND_BUFSIZE
+    int32_t send_size = CPPHTTPLIB_SOCKET_INTERNAL_SEND_BUFSIZE;
+    setsockopt(sock, SOL_SOCKET, SO_SNDBUF,
+               reinterpret_cast<char *>(&send_size), sizeof(send_size));
+#endif
+#ifdef CPPHTTPLIB_SOCKET_INTERNAL_RECV_BUFSIZE
+    int32_t recv_size = CPPHTTPLIB_SOCKET_INTERNAL_RECV_BUFSIZE;
+    setsockopt(sock, SOL_SOCKET, SO_RCVBUF,
+               reinterpret_cast<char *>(&recv_size), sizeof(recv_size));
+#endif
 
     // bind or connect
     if (bind_or_connect(sock, *rp)) {
